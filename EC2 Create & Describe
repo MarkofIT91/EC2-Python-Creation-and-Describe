@@ -1,0 +1,35 @@
+import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+import time
+
+def create_ec2_instance():
+    try:
+        print("Creating EC2 instance")
+        resource_ec2 = boto3.client("ec2")
+        resource_ec2.run_instances(
+            ImageId='ami-06b21ccaeff8cd686',
+            MinCount=1,
+            MaxCount=1,
+            InstanceType='t2.micro'
+        )
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        print(f"Credentials error: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+create_ec2_instance()
+
+
+def describe_ec2_instance():
+    try:
+        print("Describing EC2 instance")
+        resource_ec2 = boto3.client("ec2")
+        response = resource_ec2.describe_instances()["Reservations"][0]["Instances"][0]["InstanceId"]
+        print(response)
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        print(f"Credentials error: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+describe_ec2_instance()
+time.sleep(10)
